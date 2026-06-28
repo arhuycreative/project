@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARHUY Agency Trip 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f3f4f6; }
+        .tab-content { display: none; animation: fadeIn 0.5s; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        
+        /* Animasi Loading Spinner */
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #4f46e5; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="text-gray-800 pb-20 md:pb-0">
+
+    <!-- Mobile Top Header -->
+    <div class="md:hidden bg-indigo-600 text-white p-4 shadow-md sticky top-0 z-50 flex justify-between items-center">
+        <h1 class="font-bold text-lg"><i class="fas fa-plane-departure mr-2"></i> ARHUY Trip '26</h1>
+        <button onclick="checkAdmin()" class="text-indigo-200 hover:text-white"><i class="fas fa-cog"></i></button>
+    </div>
+
+    <div class="flex flex-col md:flex-row min-h-screen">
+        <!-- Sidebar (Desktop) / Bottom Nav (Mobile) -->
+        <nav class="glass shadow-lg md:w-64 fixed md:sticky bottom-0 md:top-0 w-full md:h-screen z-40 border-t md:border-t-0 md:border-r border-gray-200">
+            <div class="hidden md:block p-6 text-center border-b border-gray-100">
+                <div class="w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center mx-auto mb-3 text-white text-2xl font-bold shadow-lg">A</div>
+                <h2 class="font-bold text-xl text-indigo-700">ARHUY Agency</h2>
+                <p class="text-xs text-gray-500">Trip to Vila 2026</p>
+            </div>
+            <ul class="flex md:flex-col justify-around md:justify-start p-2 md:p-4 gap-2">
+                <li class="flex-1 md:flex-none">
+                    <button onclick="switchTab('dashboard')" id="btn-dashboard" class="nav-btn w-full flex flex-col md:flex-row items-center p-3 rounded-xl bg-indigo-100 text-indigo-700 font-semibold transition-all">
+                        <i class="fas fa-home md:mr-3 text-xl md:text-base mb-1 md:mb-0"></i> <span class="text-[10px] md:text-base">Dashboard</span>
+                    </button>
+                </li>
+                <li class="flex-1 md:flex-none">
+                    <button onclick="switchTab('peserta')" id="btn-peserta" class="nav-btn w-full flex flex-col md:flex-row items-center p-3 rounded-xl text-gray-600 hover:bg-gray-100 transition-all">
+                        <i class="fas fa-users md:mr-3 text-xl md:text-base mb-1 md:mb-0"></i> <span class="text-[10px] md:text-base">Peserta</span>
+                    </button>
+                </li>
+                <li class="flex-1 md:flex-none">
+                    <button onclick="switchTab('rundown')" id="btn-rundown" class="nav-btn w-full flex flex-col md:flex-row items-center p-3 rounded-xl text-gray-600 hover:bg-gray-100 transition-all">
+                        <i class="fas fa-list-alt md:mr-3 text-xl md:text-base mb-1 md:mb-0"></i> <span class="text-[10px] md:text-base">Rundown</span>
+                    </button>
+                </li>
+                <li class="flex-1 md:flex-none">
+                    <button onclick="switchTab('biaya')" id="btn-biaya" class="nav-btn w-full flex flex-col md:flex-row items-center p-3 rounded-xl text-gray-600 hover:bg-gray-100 transition-all">
+                        <i class="fas fa-wallet md:mr-3 text-xl md:text-base mb-1 md:mb-0"></i> <span class="text-[10px] md:text-base">Biaya</span>
+                    </button>
+                </li>
+                <li class="hidden md:block mt-auto pt-10">
+                     <button onclick="checkAdmin()" class="w-full flex items-center p-3 rounded-xl text-gray-400 hover:text-indigo-600 transition-all text-sm">
+                        <i class="fas fa-lock mr-3"></i> Admin Panel
+                    </button>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-4 md:p-8 w-full max-w-6xl mx-auto">
+            
+            <!-- Global Loading State -->
+            <div id="global-loading" class="hidden flex flex-col items-center justify-center p-10 mt-10">
+                <div class="loader mb-4"></div>
+                <p class="text-indigo-600 font-semibold animate-pulse">Menghubungkan ke Database...</p>
+            </div>
+
+            <div id="content-area">
+                <!-- DASHBOARD -->
+                <div id="dashboard" class="tab-content active">
+                    <div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl p-8 md:p-12 text-white shadow-xl mb-8 relative overflow-hidden">
+                        <div class="relative z-10">
+                            <span class="bg-white/20 px-3 py-1 rounded-full text-sm font-semibold backdrop-blur-sm">6 - 7 Juli 2026</span>
+                            <h1 class="text-3xl md:text-5xl font-bold mt-4 mb-2">Vila Getaway! 🌴</h1>
+                            <p class="text-indigo-100 md:text-lg max-w-xl">Waktunya ARHUY Agency Creative healing bareng, lepaskan penat, dan pererat solidaritas tim.</p>
+                            
+                            <div class="mt-8 flex gap-4 text-center">
+                                <div class="bg-white/10 p-3 rounded-xl backdrop-blur-md min-w-[80px]">
+                                    <div id="cd-days" class="text-2xl font-bold">00</div>
+                                    <div class="text-xs">Hari</div>
+                                </div>
+                                <div class="bg-white/10 p-3 rounded-xl backdrop-blur-md min-w-[80px]">
+                                    <div id="cd-hours" class="text-2xl font-bold">00</div>
+                                    <div class="text-xs">Jam</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="absolute -bottom-10 -right-10 w-64 h-64 bg-white opacity-10 rounded-full blur-3xl"></div>
+                        <div class="absolute top-10 right-20 w-32 h-32 bg-purple-400 opacity-20 rounded-full blur-2xl"></div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4 cursor-pointer hover:shadow-md transition-all" onclick="switchTab('peserta')">
+                            <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl"><i class="fas fa-user-check"></i></div>
+                            <div>
+                                <p class="text-gray-500 text-sm">Total Peserta</p>
+                                <h3 class="text-2xl font-bold text-gray-800" id="dash-count-peserta">0 Orang</h3>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4 cursor-pointer hover:shadow-md transition-all" onclick="switchTab('rundown')">
+                            <div class="w-14 h-14 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-2xl"><i class="fas fa-calendar-check"></i></div>
+                            <div>
+                                <p class="text-gray-500 text-sm">Agenda Acara</p>
+                                <h3 class="text-2xl font-bold text-gray-800" id="dash-count-rundown">0 Kegiatan</h3>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4 cursor-pointer hover:shadow-md transition-all" onclick="switchTab('biaya')">
+                            <div class="w-14 h-14 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center text-2xl"><i class="fas fa-coins"></i></div>
+                            <div>
+                                <p class="text-gray-500 text-sm">Total Biaya</p>
+                                <h3 class="text-xl font-bold text-gray-800" id="dash-total-biaya">Rp 0</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PESERTA -->
+                <div id="peserta" class="tab-content">
+                    <div class="flex justify-between items-end mb-6">
+                        <div>
+                            <h2 class="text-2xl md:text-3xl font-bold text-gray-800">Daftar Peserta</h2>
+                            <p class="text-gray-500">Siapa aja nih yang ikut seru-seruan?</p>
+                        </div>
+                        <button onclick="document.getElementById('modal-join').classList.remove('hidden')" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg shadow-md font-medium transition-colors">
+                            <i class="fas fa-plus mr-2"></i>Ikut Join!
+                        </button>
+                    </div>
+
+                    <div id="grid-peserta" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
+                        <!-- Cards will be generated here -->
+                    </div>
+                </div>
+
+                <!-- RUNDOWN -->
+                <div id="rundown" class="tab-content">
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Rundown Acara</h2>
+                    <p class="text-gray-500 mb-8">Jadwal kegiatan selama di vila.</p>
+
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8">
+                        <h3 class="text-xl font-bold text-indigo-600 mb-6 border-b pb-2"><i class="fas fa-sun mr-2"></i>Hari 1: Senin, 6 Juli 2026</h3>
+                        <div class="relative border-l-2 border-indigo-100 ml-3 md:ml-4 space-y-8" id="timeline-hari-1">
+                            <!-- Items rendered by JS -->
+                        </div>
+
+                        <h3 class="text-xl font-bold text-indigo-600 mt-12 mb-6 border-b pb-2"><i class="fas fa-cloud-sun mr-2"></i>Hari 2: Selasa, 7 Juli 2026</h3>
+                        <div class="relative border-l-2 border-indigo-100 ml-3 md:ml-4 space-y-8" id="timeline-hari-2">
+                            <!-- Items rendered by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BIAYA -->
+                <div id="biaya" class="tab-content">
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Rincian Biaya</h2>
+                    <p class="text-gray-500 mb-8">Transparansi anggaran trip ARHUY Agency.</p>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-gray-50 text-gray-600 text-sm">
+                                        <th class="p-4 font-semibold">Keterangan</th>
+                                        <th class="p-4 font-semibold text-right">Jumlah</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-biaya" class="divide-y divide-gray-100">
+                                    <!-- Rendered by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div>
+                            <div class="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-6 text-white shadow-lg sticky top-6">
+                                <h3 class="text-gray-400 text-sm font-medium mb-1">Total Kebutuhan</h3>
+                                <div class="text-3xl font-bold mb-6" id="total-biaya-display">Rp 0</div>
+                                
+                                <h3 class="text-gray-400 text-sm font-medium mb-1">Estimasi Patungan / Orang</h3>
+                                <div class="text-xl font-bold text-teal-400" id="patungan-display">Rp 0</div>
+                                <p class="text-xs text-gray-500 mt-2">*Berdasarkan jumlah peserta yang mendaftar saat ini.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ADMIN PANEL -->
+                <div id="admin" class="tab-content">
+                    <div class="flex items-center gap-3 mb-6 border-b pb-4">
+                        <i class="fas fa-shield-alt text-3xl text-red-500"></i>
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-800">Admin Dashboard</h2>
+                            <p class="text-gray-500 text-sm">Area khusus panitia untuk menambahkan data ke Database.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Form Tambah Rundown -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                            <h3 class="font-bold text-lg mb-4 text-indigo-700">Tambah Rundown Baru</h3>
+                            <form id="form-admin-rundown" onsubmit="addRundown(event)" class="space-y-4">
+                                <div>
+                                    <label class="block text-sm text-gray-600 mb-1">Hari Ke</label>
+                                    <select id="ar-hari" class="w-full border rounded-lg p-2 bg-gray-50" required>
+                                        <option value="1">Hari 1 (6 Juli 2026)</option>
+                                        <option value="2">Hari 2 (7 Juli 2026)</option>
+                                    </select>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm text-gray-600 mb-1">Waktu Mulai</label>
+                                        <input type="time" id="ar-waktu" class="w-full border rounded-lg p-2 bg-gray-50" required>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm text-gray-600 mb-1">Ikon (FontAwesome)</label>
+                                        <input type="text" id="ar-ikon" placeholder="fa-utensils" class="w-full border rounded-lg p-2 bg-gray-50" value="fa-circle">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm text-gray-600 mb-1">Nama Kegiatan</label>
+                                    <input type="text" id="ar-kegiatan" class="w-full border rounded-lg p-2 bg-gray-50" required>
+                                </div>
+                                <div>
+                                    <label class="block text-sm text-gray-600 mb-1">Deskripsi/PIC</label>
+                                    <input type="text" id="ar-deskripsi" class="w-full border rounded-lg p-2 bg-gray-50">
+                                </div>
+                                <button type="submit" class="w-full bg-indigo-600 text-white p-2 rounded-lg font-medium">Simpan Rundown</button>
+                            </form>
+                        </div>
+
+                        <!-- Form Tambah Biaya -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                            <h3 class="font-bold text-lg mb-4 text-orange-600">Tambah Rincian Biaya</h3>
+                            <form id="form-admin-biaya" onsubmit="addBiaya(event)" class="space-y-4">
+                                <div>
+                                    <label class="block text-sm text-gray-600 mb-1">Nama Pengeluaran</label>
+                                    <input type="text" id="ab-nama" class="w-full border rounded-lg p-2 bg-gray-50" required placeholder="Contoh: Sewa Vila 2 Malam">
+                                </div>
+                                <div>
+                                    <label class="block text-sm text-gray-600 mb-1">Total Biaya (Rp)</label>
+                                    <input type="number" id="ab-jumlah" class="w-full border rounded-lg p-2 bg-gray-50" required>
+                                </div>
+                                <button type="submit" class="w-full bg-orange-500 text-white p-2 rounded-lg font-medium">Simpan Biaya</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Form Join Peserta -->
+    <div id="modal-join" class="fixed inset-0 bg-black/60 z-[100] hidden flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all">
+            <div class="bg-indigo-600 p-4 text-white flex justify-between items-center">
+                <h3 class="font-bold text-lg">Formulir Keikutsertaan</h3>
+                <button onclick="document.getElementById('modal-join').classList.add('hidden')" class="text-indigo-200 hover:text-white"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <form id="form-join" onsubmit="submitPeserta(event)" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Nama Panggilan</label>
+                    <input type="text" id="p-nama" required class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none" placeholder="Masukkan nama kamu...">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Foto (Selfie/Bebas)</label>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-50 transition-colors" onclick="document.getElementById('p-foto').click()">
+                        <i class="fas fa-camera text-3xl text-gray-400 mb-2"></i>
+                        <p class="text-sm text-gray-500" id="file-name-display">Klik untuk pilih foto (Max 3MB)</p>
+                    </div>
+                    <input type="file" id="p-foto" accept="image/*" class="hidden" onchange="previewFile(this)">
+                    <input type="hidden" id="p-foto-base64">
+                </div>
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg mt-4 transition-colors">
+                    Daftar Sekarang!
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // =====================================================================
+        // TARUH URL WEB APP ANDA DI BAWAH INI (Yang berakhiran /exec)
+        // =====================================================================
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyzqk-W-tey2mcPkkYaL1nV-AVn6p-_1UQa7C-nrAqR_XMN6gGbhOnPKZDsNx6McJ2f/exec'; 
+
+        // State Penyimpanan Data Live
+        let dataState = { peserta: [], rundown: [], biaya: [] };
+
+        // --- FETCH DATA DARI GOOGLE SHEETS ---
+        async function loadData() {
+            if(SCRIPT_URL === 'PASTE_URL_WEB_APP_ANDA_DISINI') {
+                Swal.fire('Perhatian!', 'Anda belum memasukkan URL Web App (SCRIPT_URL) ke dalam kode HTML.', 'warning');
+                return;
+            }
+
+            document.getElementById('content-area').style.display = 'none';
+            document.getElementById('global-loading').classList.remove('hidden');
+
+            try {
+                const response = await fetch(SCRIPT_URL);
+                const data = await response.json();
+                
+                dataState = data;
+                renderAll();
+                
+                document.getElementById('global-loading').classList.add('hidden');
+                document.getElementById('content-area').style.display = 'block';
+            } catch (error) {
+                console.error(error);
+                Swal.fire('Error', 'Gagal memuat data dari database. Pastikan URL sudah benar.', 'error');
+                document.getElementById('global-loading').classList.add('hidden');
+            }
+        }
+
+        // --- FUNGSI POST (KIRIM DATA KE GOOGLE SHEETS) ---
+        async function sendData(payload, successMsg) {
+            Swal.fire({
+                title: 'Menyimpan Data...',
+                text: 'Harap tunggu sebentar, sedang mengirim ke Google Sheets',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+
+            try {
+                // Gunakan text/plain untuk bypass preflight CORS di GAS
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+                
+                // Jika sukses kirim, tutup form dan muat ulang data
+                Swal.fire('Berhasil!', successMsg, 'success');
+                await loadData(); // Reload data dari sheets
+            } catch (error) {
+                console.error(error);
+                Swal.fire('Error', 'Terjadi kesalahan saat menyimpan data.', 'error');
+            }
+        }
+
+        // --- NAVIGATION LOGIC ---
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => {
+                el.classList.remove('bg-indigo-100', 'text-indigo-700', 'font-semibold');
+                el.classList.add('text-gray-600');
+            });
+
+            document.getElementById(tabId).classList.add('active');
+            
+            if(tabId !== 'admin') {
+                const btn = document.getElementById('btn-' + tabId);
+                if(btn) {
+                    btn.classList.remove('text-gray-600');
+                    btn.classList.add('bg-indigo-100', 'text-indigo-700', 'font-semibold');
+                }
+            }
+        }
+
+        function checkAdmin() {
+            Swal.fire({
+                title: 'Akses Admin',
+                input: 'password',
+                inputLabel: 'Masukkan PIN',
+                inputPlaceholder: 'PIN',
+                showCancelButton: true,
+                confirmButtonColor: '#4f46e5'
+            }).then((result) => {
+                if (result.value === 'admin123') {
+                    switchTab('admin');
+                    Swal.fire('Akses Diberikan', 'Selamat datang panitia', 'success');
+                } else if (result.value) {
+                    Swal.fire('Akses Ditolak', 'PIN Salah!', 'error');
+                }
+            });
+        }
+
+        // --- RENDER FUNCTIONS ---
+        function formatRupiah(angka) {
+            let val = parseInt(angka) || 0;
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(val);
+        }
+
+        function renderAll() {
+            renderDashboard();
+            renderPeserta();
+            renderRundown();
+            renderBiaya();
+        }
+
+        function renderDashboard() {
+            document.getElementById('dash-count-peserta').innerText = dataState.peserta.length + " Orang";
+            document.getElementById('dash-count-rundown').innerText = dataState.rundown.length + " Kegiatan";
+            
+            let totalBiaya = dataState.biaya.reduce((sum, item) => sum + (parseInt(item.jumlah) || 0), 0);
+            document.getElementById('dash-total-biaya').innerText = formatRupiah(totalBiaya);
+        }
+
+        function renderPeserta() {
+            const grid = document.getElementById('grid-peserta');
+            grid.innerHTML = '';
+            
+            if(dataState.peserta.length === 0) {
+                grid.innerHTML = '<p class="text-gray-500 col-span-full bg-white p-4 rounded-xl shadow-sm text-center">Belum ada peserta. Jadilah yang pertama mendaftar!</p>';
+                return;
+            }
+
+            dataState.peserta.forEach(p => {
+                let imgSrc = p.foto || `https://api.dicebear.com/7.x/fun-emoji/svg?seed=${p.nama}`;
+                
+                // FIX: Ubah link Google Drive biasa menjadi link Thumbnail agar tidak diblokir browser
+                if(imgSrc.includes('drive.google.com/uc')) {
+                    try {
+                        const urlParams = new URLSearchParams(imgSrc.split('?')[1]);
+                        const fileId = urlParams.get('id');
+                        if(fileId) {
+                            // Menggunakan endpoint lh3 googleusercontent yang lebih ramah untuk tag <img>
+                            imgSrc = `https://lh3.googleusercontent.com/d/${fileId}=w500`; 
+                        }
+                    } catch(e) {
+                        console.error("Gagal parse URL Google Drive", e);
+                    }
+                }
+
+                grid.innerHTML += `
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transform hover:scale-105 transition-transform duration-300">
+                        <img src="${imgSrc}" class="w-full aspect-[3/4] object-cover" alt="Foto ${p.nama}" onerror="this.src='https://api.dicebear.com/7.x/fun-emoji/svg?seed=${p.nama}'">
+                        <div class="p-3 text-center">
+                            <h4 class="font-bold text-gray-800">${p.nama}</h4>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderRundown() {
+            const t1 = document.getElementById('timeline-hari-1');
+            const t2 = document.getElementById('timeline-hari-2');
+            t1.innerHTML = ''; t2.innerHTML = '';
+
+            if(dataState.rundown.length === 0) {
+                t1.innerHTML = '<p class="text-sm text-gray-400">Jadwal belum ditambahkan panitia.</p>';
+                t2.innerHTML = '<p class="text-sm text-gray-400">Jadwal belum ditambahkan panitia.</p>';
+                return;
+            }
+
+            // Sort by time
+            let sortedRundown = [...dataState.rundown].sort((a, b) => {
+                let w1 = a.waktu || '00:00';
+                let w2 = b.waktu || '00:00';
+                return w1.localeCompare(w2);
+            });
+
+            sortedRundown.forEach(r => {
+                // Perbaiki format waktu jika dari GAS diconvert menjadi format aneh
+                let formatWaktu = r.waktu;
+                if(r.waktu && typeof r.waktu === 'string' && r.waktu.includes('T')) {
+                     const dateObj = new Date(r.waktu);
+                     formatWaktu = dateObj.getHours().toString().padStart(2, '0') + ':' + dateObj.getMinutes().toString().padStart(2, '0');
+                }
+
+                const html = `
+                    <div class="relative pl-6 md:pl-8">
+                        <div class="absolute -left-[11px] top-1 w-5 h-5 rounded-full bg-indigo-500 border-4 border-white flex items-center justify-center shadow"></div>
+                        <div class="bg-gray-50 rounded-lg p-4 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex items-center gap-2 mb-1 text-indigo-600 font-bold">
+                                <i class="fas fa-clock"></i> ${formatWaktu}
+                            </div>
+                            <h4 class="text-lg font-bold text-gray-800"><i class="fas ${r.ikon || 'fa-check'} text-gray-400 mr-2"></i>${r.kegiatan}</h4>
+                            ${r.deskripsi ? `<p class="text-gray-500 text-sm mt-1">${r.deskripsi}</p>` : ''}
+                        </div>
+                    </div>
+                `;
+                if(r.hari == '1') t1.innerHTML += html;
+                if(r.hari == '2') t2.innerHTML += html;
+            });
+        }
+
+        function renderBiaya() {
+            const table = document.getElementById('table-biaya');
+            table.innerHTML = '';
+            
+            let total = 0;
+            if(dataState.biaya.length === 0) {
+                 table.innerHTML = '<tr><td colspan="2" class="p-4 text-center text-gray-500">Belum ada rincian biaya.</td></tr>';
+            }
+
+            dataState.biaya.forEach(b => {
+                let jml = parseInt(b.jumlah) || 0;
+                total += jml;
+                table.innerHTML += `
+                    <tr class="hover:bg-gray-50">
+                        <td class="p-4 text-gray-800">${b.nama}</td>
+                        <td class="p-4 text-right font-medium text-gray-800">${formatRupiah(jml)}</td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById('total-biaya-display').innerText = formatRupiah(total);
+            
+            let jumlahPeserta = dataState.peserta.length || 1; 
+            let patungan = total / jumlahPeserta;
+            document.getElementById('patungan-display').innerText = formatRupiah(patungan);
+        }
+
+        // --- FORM HANDLERS ---
+        function previewFile(input) {
+            const file = input.files[0];
+            if (file) {
+                // Max file size 3MB to avoid Google Apps Script payload limit
+                if(file.size > 3000000) {
+                    Swal.fire('Terlalu Besar!', 'Ukuran foto maksimal 3 MB. Pilih foto lain yang ukurannya lebih kecil.', 'warning');
+                    input.value = "";
+                    return;
+                }
+
+                document.getElementById('file-name-display').innerText = file.name;
+                const reader = new FileReader();
+                reader.onloadend = function () {
+                    document.getElementById('p-foto-base64').value = reader.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function submitPeserta(e) {
+            e.preventDefault();
+            const nama = document.getElementById('p-nama').value;
+            let foto = document.getElementById('p-foto-base64').value; // Base64
+            
+            const payload = {
+                action: 'addPeserta',
+                data: { nama: nama, foto: foto }
+            };
+
+            document.getElementById('modal-join').classList.add('hidden');
+            e.target.reset();
+            document.getElementById('p-foto-base64').value = '';
+            document.getElementById('file-name-display').innerText = 'Klik untuk pilih foto';
+            
+            sendData(payload, 'Yeay! Kamu sudah terdaftar di Trip ARHUY 2026!');
+        }
+
+        function addRundown(e) {
+            e.preventDefault();
+            const payload = {
+                action: 'addRundown',
+                data: {
+                    hari: document.getElementById('ar-hari').value,
+                    waktu: document.getElementById('ar-waktu').value,
+                    ikon: document.getElementById('ar-ikon').value,
+                    kegiatan: document.getElementById('ar-kegiatan').value,
+                    deskripsi: document.getElementById('ar-deskripsi').value
+                }
+            };
+            e.target.reset();
+            sendData(payload, 'Rundown berhasil ditambahkan ke database.');
+        }
+
+        function addBiaya(e) {
+            e.preventDefault();
+            const payload = {
+                action: 'addBiaya',
+                data: {
+                    nama: document.getElementById('ab-nama').value,
+                    jumlah: parseInt(document.getElementById('ab-jumlah').value)
+                }
+            };
+            e.target.reset();
+            sendData(payload, 'Rincian biaya berhasil ditambahkan ke database.');
+        }
+
+        // --- COUNTDOWN LOGIC ---
+        function initCountdown() {
+            const tripDate = new Date('July 6, 2026 08:00:00').getTime();
+            
+            setInterval(() => {
+                const now = new Date().getTime();
+                const distance = tripDate - now;
+
+                if (distance > 0) {
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    
+                    document.getElementById('cd-days').innerText = days;
+                    document.getElementById('cd-hours').innerText = hours;
+                }
+            }, 1000);
+        }
+
+        // Initialize App
+        window.onload = () => {
+            initCountdown();
+            loadData(); // Langsung tarik data dari google sheet saat pertama kali buka web
+        };
+    </script>
+</body>
+</html>
